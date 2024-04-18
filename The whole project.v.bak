@@ -10,10 +10,10 @@ KeyExpansion gen(key,w); // returning the generated key in wire w
 k=w;
 encrypt a(in,encrypted,k);
 decrypt b(encrypted,decrypted,k); // 128 bit key length operation
-encrypt #(6,12) c(in,encrypted,k); // nk=6,nr=12
-decrypt #(6,12) d(encrypted,decrypted,k); // 196 bit key length operation
-encrypt #(8,14) e(in,encrypted,k);		  // nk=8,nr=14
-decrypt #(8,14) f(encrypted,decrypted,k); // 256 bit key length operation
+encrypt a#(6,12)(in,encrypted,k); // nk=6,nr=12
+decrypt b#(6,12)(encrypted,decrypted,k); // 196 bit key length operation
+encrypt a#(8,14)(in,encrypted,k);		  // nk=8,nr=14
+decrypt b#(8,14)(encrypted,decrypted,k); // 256 bit key length operation
 always @*
 for (integerj=0;j<128;j=j+1)
 if(in[j]!=decrypted[j])
