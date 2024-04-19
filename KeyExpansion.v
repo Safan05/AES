@@ -1,30 +1,33 @@
-module KeyExpansion#(parameter nk=4,parameter nr=10)(key,w);
-input [0:32*nk-1] key; // 4*nk byte size and 1 byte = 8 bit so 8*4*nk=32*nk
+module KeyExpansion#(parameter Nk=4,parameter nr=10)(key,w);
+input [0:32*Nk-1] key; // 4*nk byte size and 1 byte = 8 bit so 8*4*nk=32*nk
 output [0:128*(nr+1)-1]w; // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
 reg [0:31]temp; // the previous word used in generating the conmming one
 reg [0:31]sub_temp; // used for the output of Subword
 reg [0:31]rot_temp; // used for the output of Rotword
 reg [0:31]rcon; //used for the output of rcon_gen
-assign w=key;
-integer i;
+reg [0:31]temp2;
+integer i,j;
 always @* begin
-for(i=nk;i<4*(nr+1);i=i+1)
+w=key; // assign the first words fot the output to be the key itself --> The while loop in the document
+for(i=Nk;i<4*(nr+1);i=i+1)
 begin
-temp=w[(32*i)-33:(32*i)-1];
-if(i%Nk==0){
+temp=w[((32*i)-32)+:31]; // [96:127]-->[128:159]-->[160:191]
+if(i%Nk==0)
+begin
 rot_temp=RotWord(temp);
 sub_temp=SubWord(rot_temp);
 rcon=rcon_gen(i/Nk);
-temp=sub_temp xor rcon;
-}
-else if (Nk > 6 && i % Nk = 4){
-temp = SubWord(temp)
-}
-w[32*i:32*i+32]=w[32*i-32*Nk:32*i-32*Nk+32] xor temp;
+temp=sub_temp ^ rcon;
+end
+else if (Nk > 6 && i % Nk == 4)
+temp = SubWord(temp);
+temp2=w[(32*i-32*Nk)+:31]^temp; //[0:31]-->[32:63]->.....-->[1248:1279]
+w[(32*i)+:31]=temp2;				  //[128:159]-->[160:191]-->.....-->[1376:1407]
 end
 end
 function [0:31] rcon_gen(input [0:3]r);
 begin
+	 case(r)
     4'h1: rcon_gen=32'h01000000;// 02 power 0=01
     4'h2: rcon_gen=32'h02000000;// 02 power 1=02
     4'h3: rcon_gen=32'h04000000;// 02 power 2=04
@@ -36,15 +39,16 @@ begin
     4'h9: rcon_gen=32'h1b000000;// 02 power 8=256=100 in Hexa but it is 1b due to the field of GF(2)
     4'ha: rcon_gen=32'h36000000;// 02 power 9=200 in Hexa but it is 36 due to the field of GF(2)
     default: rcon_gen=32'h00000000;
+	 endcase
 end
 endfunction
 function [0:31] RotWord(input[0:31] word);
 begin
 reg [0:7] temp;
-assign temp=word[0:7];
-assign word[0:23]=word[8:31];
-assign word[24:31]=temp;
-assign RotWord=word;
+temp=word[0:7];
+word[0:23]=word[8:31];
+word[24:31]=temp;
+RotWord=word;
 end
 endfunction
 function [0:31] SubWord(input[0:31] word);
@@ -53,15 +57,15 @@ reg [0:7]b1;
 reg [0:7]b2;
 reg [0:7]b3;
 reg [0:7]b4;
-assign b1=word[0:7];
-assign b2=word[8:15];
-assign b3=word[16:23];
-assign b4=word[24:31];
-assign b1=c(b1);
-assign b2=c(b2);
-assign b3=c(b3);
-assign b4=c(b4);
-assign SubWord={b1,b2,b3,b4};
+b1=word[0:7];
+b2=word[8:15];
+b3=word[16:23];
+b4=word[24:31];
+b1=c(b1);
+b2=c(b2);
+b3=c(b3);
+b4=c(b4);
+SubWord={b1,b2,b3,b4};
 end
 endfunction
 function [0:7]c(input [0:7]a);
@@ -325,4 +329,5 @@ begin
 	   8'hff: c=8'h16;
 	endcase
 end
+endfunction
 endmodule

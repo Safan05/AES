@@ -1,65 +1,89 @@
-module aes();
-reg [0:127]in=128'h3243f6a8885a308d313198a2e0370734;
-wire [0:256]key=128'h2b7e151628aed2a6abf7158809cf4f3c;
-wire[0:127]encrypted ;
-wire[0:127]decrypted ;
-reg check=1'b1;
-wire [0:128*(nr+1)-1]w;
-reg [0:128*(nr+1)-1] k;
-KeyExpansion gen(key,w); // returning the generated key in wire w
-k=w;
-encrypt a(in,encrypted,k);
-decrypt b(encrypted,decrypted,k); // 128 bit key length operation
-encrypt #(6,12) c(in,encrypted,k); // nk=6,nr=12
-decrypt #(6,12) d(encrypted,decrypted,k); // 196 bit key length operation
-encrypt #(8,14) e(in,encrypted,k);		  // nk=8,nr=14
-decrypt #(8,14) f(encrypted,decrypted,k); // 256 bit key length operation
+module aes(check_128,check_196,check_256);
+reg [127:0]in=128'h3243f6a8885a308d313198a2e0370734;
+wire [127:0]key_128=128'h2b7e151628aed2a6abf7158809cf4f3c;
+wire [195:0]key_196=196'h8e73b0f7da0e6452c810f32b809079e562f8ead2522c6b7b;
+wire [255:0]key_256=256'h603deb1015ca71be2b73aef0857d77811f352c073b6108d72d9810a30914dff4c;
+wire[127:0]encrypted_128 ;
+wire[127:0]decrypted_128 ;
+wire[127:0]encrypted_196 ;
+wire[127:0]decrypted_196 ;
+wire[127:0]encrypted_256 ;
+wire[127:0]decrypted_256 ;
+output check_128;
+output check_196;
+output check_256;
+wire [0:128*(11)-1]w_128;
+reg [0:128*(11)-1] k_128;
+KeyExpansion gen128(key_128,w_128); // returning the generated 128 bit key in wire w
+assign k_128=w_128;
+wire [0:128*(13)-1]w_196;
+reg [0:128*(13)-1] k_196;
+KeyExpansion #(6,12)gen196(key_196,w_196); // returning the generated 196 bit key in wire w
+assign k_196=w_196;
+wire [0:128*(15)-1]w_256;
+reg [0:128*(15)-1] k_256;
+KeyExpansion #(8,14)gen256(key_256,w_256); // returning the generated 256 bit key in wire w
+assign k_256=w_256;
+encrypt a(in,encrypted_128,k_128);
+decrypt b(encrypted_128,decrypted_128,k_128); // 128 bit key length operation
+encrypt #(6,12) c(in,encrypted_196,k_196); // nk=6,nr=12
+decrypt #(6,12) d(encrypted_196,decrypted_196,k_196); // 196 bit key length operation
+encrypt #(8,14) e(in,encrypted_256,k);		  // nk=8,nr=14
+decrypt #(8,14) f(encrypted_256,decrypted_256,k); // 256 bit key length operation
 always @*
-for (integerj=0;j<128;j=j+1)
-if(in[j]!=decrypted[j])
-check=0;
+begin
+if(in==decrypted_128)
+check_128=1;
+if(in==decrypted_196)
+check_196=1;
+if(in==decrypted_256)
+check_256=1;
+end
 endmodule
 
-module encrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,key);
-input [0:128*(nr+1)-1] key; // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
+module encrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,input [0:128*(nr+1)-1] key_e);  // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
+
 
 endmodule
 
-module decrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,key);
-input [0:128*(nr+1)-1] key; // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
+module decrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,input [0:128*(nr+1)-1] key_d);  // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
+
 endmodule
 
-module AddRoundKey(input [0:127] in,input [0:127] key, output [0:127] out);
-assign out=in^key;
+module AddRoundKey(input [0:127] in,input [0:127] key_add, output [0:127] out);
+assign out=in^key_add;
 endmodule
 
-module KeyExpansion#(parameter nk=4,parameter nr=10)(key,w);
-input [0:32*nk-1] key; // 4*nk byte size and 1 byte = 8 bit so 8*4*nk=32*nk
+module KeyExpansion#(parameter Nk=4,parameter nr=10)(key,w);
+input [0:32*Nk-1] key; // 4*nk byte size and 1 byte = 8 bit so 8*4*nk=32*nk
 output [0:128*(nr+1)-1]w; // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
 reg [0:31]temp; // the previous word used in generating the conmming one
 reg [0:31]sub_temp; // used for the output of Subword
 reg [0:31]rot_temp; // used for the output of Rotword
 reg [0:31]rcon; //used for the output of rcon_gen
-assign w=key;
-integer i;
+reg [0:31]temp2;
+integer i,j;
 always @* begin
-for(i=nk;i<4*(nr+1);i=i+1)
+w=key; // assign the first words fot the output to be the key itself --> The while loop in the document
+for(i=Nk;i<4*(nr+1);i=i+1)
 begin
-temp=w[(32*i)-33:(32*i)-1];
-if(i%Nk==0){
+temp=w[((32*i)-32)+:31]; // [96:127]-->[128:159]-->[160:191]
+if(i%Nk==0)
+begin
 rot_temp=RotWord(temp);
 sub_temp=SubWord(rot_temp);
 rcon=rcon_gen(i/Nk);
-temp=sub_temp xor rcon;
-}
-else if (Nk > 6 && i % Nk = 4){
-temp = SubWord(temp)
-}
-w[32*i:32*i+32]=w[32*i-32*Nk:32*i-32*Nk+32] xor temp;
+temp=sub_temp ^ rcon;
+end
+else if (Nk > 6 && i % Nk == 4)
+temp = SubWord(temp);
+temp2=w[(32*i-32*Nk)+:31]^temp; //[0:31]-->[32:63]->.....-->[1248:1279]
+w[(32*i)+:31]=temp2;				  //[128:159]-->[160:191]-->.....-->[1376:1407]
 end
 end
 function [0:31] rcon_gen(input [0:3]r);
 begin
+	 case(r)
     4'h1: rcon_gen=32'h01000000;// 02 power 0=01
     4'h2: rcon_gen=32'h02000000;// 02 power 1=02
     4'h3: rcon_gen=32'h04000000;// 02 power 2=04
@@ -71,15 +95,16 @@ begin
     4'h9: rcon_gen=32'h1b000000;// 02 power 8=256=100 in Hexa but it is 1b due to the field of GF(2)
     4'ha: rcon_gen=32'h36000000;// 02 power 9=200 in Hexa but it is 36 due to the field of GF(2)
     default: rcon_gen=32'h00000000;
+	 endcase
 end
 endfunction
 function [0:31] RotWord(input[0:31] word);
 begin
 reg [0:7] temp;
-assign temp=word[0:7];
-assign word[0:23]=word[8:31];
-assign word[24:31]=temp;
-assign RotWord=word;
+temp=word[0:7];
+word[0:23]=word[8:31];
+word[24:31]=temp;
+RotWord=word;
 end
 endfunction
 function [0:31] SubWord(input[0:31] word);
@@ -88,15 +113,15 @@ reg [0:7]b1;
 reg [0:7]b2;
 reg [0:7]b3;
 reg [0:7]b4;
-assign b1=word[0:7];
-assign b2=word[8:15];
-assign b3=word[16:23];
-assign b4=word[24:31];
-assign b1=c(b1);
-assign b2=c(b2);
-assign b3=c(b3);
-assign b4=c(b4);
-assign SubWord={b1,b2,b3,b4};
+b1=word[0:7];
+b2=word[8:15];
+b3=word[16:23];
+b4=word[24:31];
+b1=c(b1);
+b2=c(b2);
+b3=c(b3);
+b4=c(b4);
+SubWord={b1,b2,b3,b4};
 end
 endfunction
 function [0:7]c(input [0:7]a);
@@ -360,4 +385,5 @@ begin
 	   8'hff: c=8'h16;
 	endcase
 end
+endfunction
 endmodule
