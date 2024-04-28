@@ -1,0 +1,71 @@
+{D:/AES Project/AES/SevenSegment.v} {1 {vlog -work work -stats=none {D:/AES Project/AES/SevenSegment.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module SevenSegment
+-- Compiling module test
+
+Top level modules:
+	test
+
+} {} {}} {D:/AES Project/AES/ShiftRows.v} {1 {vlog -work work -stats=none {D:/AES Project/AES/ShiftRows.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module ShiftRows
+
+Top level modules:
+	ShiftRows
+
+} {} {}} {D:/AES Project/AES/Encrypt.v} {1 {vlog -work work -stats=none {D:/AES Project/AES/Encrypt.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module encrypt
+
+Top level modules:
+	encrypt
+
+} {} {}} {D:/AES Project/AES/AES.v} {0 {vlog -work work -stats=none {D:/AES Project/AES/AES.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module aes
+** Warning: D:/AES Project/AES/AES.v(5): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Error: D:/AES Project/AES/AES.v(36): (vlog-2110) Illegal reference to net "check_128".
+** Error: D:/AES Project/AES/AES.v(38): (vlog-2110) Illegal reference to net "check_196".
+** Error: D:/AES Project/AES/AES.v(40): (vlog-2110) Illegal reference to net "check_256".
+
+} {5.0 8.0} {}} {D:/AES Project/AES/KeyExpansion.v} {0 {vlog -work work -stats=none {D:/AES Project/AES/KeyExpansion.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module KeyExpansion
+** Error: D:/AES Project/AES/KeyExpansion.v(47): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/KeyExpansion.v(56): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/KeyExpansion.v(57): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/KeyExpansion.v(58): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/KeyExpansion.v(59): Declarations not allowed in unnamed block.
+
+} {4.0 9.0} {}} {D:/AES Project/AES/The whole project.v} {0 {vlog -work work -stats=none {D:/AES Project/AES/The whole project.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module aes
+** Warning: D:/AES Project/AES/The whole project.v(5): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+** Error: D:/AES Project/AES/The whole project.v(36): (vlog-2110) Illegal reference to net "check_128".
+** Error: D:/AES Project/AES/The whole project.v(38): (vlog-2110) Illegal reference to net "check_196".
+** Error: D:/AES Project/AES/The whole project.v(40): (vlog-2110) Illegal reference to net "check_256".
+-- Compiling module encrypt
+-- Compiling module decrypt
+-- Compiling module AddRoundKey
+-- Compiling module KeyExpansion
+** Error: D:/AES Project/AES/The whole project.v(103): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/The whole project.v(112): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/The whole project.v(113): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/The whole project.v(114): Declarations not allowed in unnamed block.
+** Error: D:/AES Project/AES/The whole project.v(115): Declarations not allowed in unnamed block.
+
+} {5.0 8.0 12.0 17.0} {}} {D:/AES Project/AES/InvMix.v} {1 {vlog -work work -stats=none {D:/AES Project/AES/InvMix.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module InvMix
+
+Top level modules:
+	InvMix
+
+} {} {}} {D:/AES Project/AES/Decrypt.v} {1 {vlog -work work -stats=none {D:/AES Project/AES/Decrypt.v}
+Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+-- Compiling module decrypt
+
+Top level modules:
+	decrypt
+
+} {} {}}

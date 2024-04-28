@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 module ShiftRows(input [0:127]a,output reg[0:127]s);
 always@(*)begin
 s[0:7] = {a[0:7]};
@@ -22,31 +23,14 @@ s[120:127] = {a[88:95]};
 end
 endmodule
 
+module encrypt#(parameter nk=4,parameter nr=10,parameter n=128)(in ,out,key_e); 
+=======
 module encrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,input [0:128*(nr+1)-1] key_e); 
+>>>>>>> 1b15e5191757e61e325e63b79c28883e28e7209b
  // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
-
-reg [0:7]s00,s01,s02,s03;
-reg [0:7]s10,s11,s12,s13;
-reg [0:7]s20,s21,s22,s23;
-reg [0:7]s30,s31,s32,s33;
-
-assign s00= in[0:7];    assign s01= in[8:15];    assign s02= in[16:23];   assign s03= in[24:31];
-assign s10= in[32:39];  assign s11= in[40:47];   assign s12= in[48:55];   assign s13= in[56:63];
-assign s20= in[64:71];  assign s21= in[72:79];   assign s22= in[80:87];   assign s23= in[88:95];
-assign s30= in[96:103]; assign s31= in[104:111]; assign s32= in[112:119]; assign s33= in[120:127];
-
-
-assign in=SubBytes(
-s00,s01,s02,s03,
-s10,s11,s12,s13,
-s20,s21,s22,s23,
-s30,s31,s32,s33);
-
-
-
-
-
-
+input [127:0] in;
+output[127:0] out;
+input [n-1:0] key_e;
 
 function [0:127] SubBytes(input [0:7]
 s00,s01,s02,s03,
@@ -54,30 +38,29 @@ s10,s11,s12,s13,
 s20,s21,s22,s23,
 s30,s31,s32,s33
  );
-reg [0:7]S00,S01,S02,S03;
-reg [0:7]S10,S11,S12,S13;
-reg [0:7]S20,S21,S22,S23;
-reg [0:7]S30,S31,S32,S33;
+ 
+reg [0:7]ss00,ss01,ss02,ss03;
+reg [0:7]ss10,ss11,ss12,ss13;
+reg [0:7]ss20,ss21,ss22,ss23;
+reg [0:7]ss30,ss31,ss32,ss33;
 
 begin 
  
 
- S00 =c(s00); S01 =c(s01); S02=c(s02); S03=c(s03);
- S10 =c(s00); S11 =c(s01); S12=c(s02); S13=c(s03);
- S20 =c(s00); S21 =c(s01); S22=c(s02); S23=c(s03);
- S30 =c(s00); S31 =c(s01); S32=c(s02); S33=c(s03);
+ ss00 =c(s00); ss01 =c(s01); ss02=c(s02); ss03=c(s03);
+ ss10 =c(s00); ss11 =c(s01); ss12=c(s02); ss13=c(s03);
+ ss20 =c(s00); ss21 =c(s01); ss22=c(s02); ss23=c(s03);
+ ss30 =c(s00); ss31 =c(s01); ss32=c(s02); ss33=c(s03);
 
- SubBytes[0:7]=S00;      SubBytes[8:15]=S01;    SubBytes[16:23]=S02;    SubBytes[24:31]=S03;
- SubBytes[32:39]=S10;    SubBytes[40:47]=S11;   SubBytes[48:55]=S12;    SubBytes[56:63]=S13;
- SubBytes[64:71]=S20;    SubBytes[72:79]=S21;    SubBytes[80:87]=S22;    SubBytes[88:95]=S23;
- SubBytes[96:103]=S30;   SubBytes[104:111]=S31; SubBytes[112:119]=S32;  SubBytes[120:127]=S33;
+ SubBytes[0:7]=ss00;      SubBytes[8:15]=ss01;    SubBytes[16:23]=ss02;    SubBytes[24:31]=ss03;
+ SubBytes[32:39]=ss10;    SubBytes[40:47]=ss11;   SubBytes[48:55]=ss12;    SubBytes[56:63]=ss13;
+ SubBytes[64:71]=ss20;    SubBytes[72:79]=ss21;    SubBytes[80:87]=ss22;    SubBytes[88:95]=ss23;
+ SubBytes[96:103]=ss30;   SubBytes[104:111]=ss31; SubBytes[112:119]=ss32;  SubBytes[120:127]=ss33;
 
 
 
 end
 endfunction
-
-
 
 function [0:7]c (input [0:7] a);
 begin    
@@ -341,10 +324,7 @@ begin
 	   8'hff: c=8'h16;
 	endcase
 
-
-
 end
 endfunction
-
 
 endmodule
