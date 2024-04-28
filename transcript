@@ -1,2 +1,24 @@
-# Reading pref.tcl
-# OpenFile {D:/AES Project/AES/Encrypt.v}
+# Compile of AES.v failed with 3 errors.
+# Compile of Decrypt.v was successful.
+# Compile of Encrypt.v was successful.
+# Compile of InvMix.v was successful.
+# Compile of KeyExpansion.v failed with 5 errors.
+# Compile of SevenSegment.v was successful.
+# Compile of The whole project.v failed with 8 errors.
+# 7 compiles, 3 failed with 16 errors.
+vsim InvMix
+# vsim InvMix 
+# Start time: 12:18:50 on Apr 28,2024
+# Loading work.InvMix
+# Compile of AES.v failed with 3 errors.
+# Compile of Decrypt.v was successful.
+# Compile of Encrypt.v was successful.
+# Compile of InvMix.v was successful.
+# Compile of KeyExpansion.v failed with 5 errors.
+# Compile of SevenSegment.v was successful.
+# Compile of The whole project.v failed with 8 errors.
+# Compile of ShiftRows.v was successful.
+# 8 compiles, 3 failed with 16 errors.
+# Compile of ShiftRows.v was successful.
+# End time: 12:21:16 on Apr 28,2024, Elapsed time: 0:02:26
+# Errors: 0, Warnings: 8
