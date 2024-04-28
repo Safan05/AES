@@ -1,24 +1,33 @@
-# Compile of AES.v failed with 3 errors.
-# Compile of Decrypt.v was successful.
-# Compile of Encrypt.v was successful.
-# Compile of InvMix.v was successful.
-# Compile of KeyExpansion.v failed with 5 errors.
-# Compile of SevenSegment.v was successful.
-# Compile of The whole project.v failed with 8 errors.
-# 7 compiles, 3 failed with 16 errors.
-vsim InvMix
-# vsim InvMix 
-# Start time: 12:18:50 on Apr 28,2024
-# Loading work.InvMix
-# Compile of AES.v failed with 3 errors.
-# Compile of Decrypt.v was successful.
-# Compile of Encrypt.v was successful.
-# Compile of InvMix.v was successful.
-# Compile of KeyExpansion.v failed with 5 errors.
-# Compile of SevenSegment.v was successful.
-# Compile of The whole project.v failed with 8 errors.
-# Compile of ShiftRows.v was successful.
-# 8 compiles, 3 failed with 16 errors.
-# Compile of ShiftRows.v was successful.
-# End time: 12:21:16 on Apr 28,2024, Elapsed time: 0:02:26
-# Errors: 0, Warnings: 8
+# Reading pref.tcl
+# OpenFile {D:/CUFE/1st Year/2nd term/logical design/AES.vs/ShiftRows_inv.v}
+vlib work
+vlog -reportprogress 300 -work work {D:/CUFE/1st Year/2nd term/logical design/AES.vs/ShiftRows_inv.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:17:10 on Apr 28,2024
+# vlog -reportprogress 300 -work work D:/CUFE/1st Year/2nd term/logical design/AES.vs/ShiftRows_inv.v 
+# -- Compiling module ShiftRows_inv
+# 
+# Top level modules:
+# 	ShiftRows_inv
+# End time: 16:17:10 on Apr 28,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlib work
+# ** Warning: (vlib-34) Library already exists at "work".
+vlog -reportprogress 300 -work work {D:/CUFE/1st Year/2nd term/logical design/AES.vs/ShiftRows_inv.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:17:18 on Apr 28,2024
+# vlog -reportprogress 300 -work work D:/CUFE/1st Year/2nd term/logical design/AES.vs/ShiftRows_inv.v 
+# -- Compiling module ShiftRows_inv
+# 
+# Top level modules:
+# 	ShiftRows_inv
+# End time: 16:17:18 on Apr 28,2024, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+vlog -reportprogress 300 -work work {D:/CUFE/1st Year/2nd term/logical design/AES.vs/work/ShiftRows_inv.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
+# Start time: 16:17:32 on Apr 28,2024
+# vlog -reportprogress 300 -work work D:/CUFE/1st Year/2nd term/logical design/AES.vs/work/ShiftRows_inv.v 
+# ** Error: (vlog-7) Failed to open design unit file "D:/CUFE/1st Year/2nd term/logical design/AES.vs/work/ShiftRows_inv.v" in read mode.
+# No such file or directory. (errno = ENOENT)
+# End time: 16:17:32 on Apr 28,2024, Elapsed time: 0:00:00
+# Errors: 1, Warnings: 0
