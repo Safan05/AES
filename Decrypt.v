@@ -1,17 +1,8 @@
-module decrypt#(parameter nk=4,parameter nr=10)(input [0:127]in ,output [0:127]out,input [0:128*(nr+1)-1] key_d);
+module decrypt#(parameter nk=4,parameter nr=10,parameter n=128)(in ,out ,key_d);
   // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
-
-reg [0:7]s00,s01,s02,s03;
-reg [0:7]s10,s11,s12,s13;
-reg [0:7]s20,s21,s22,s23;
-reg [0:7]s30,s31,s32,s33;
-
-assign s00= in[0:7];    assign s01= in[8:15];    assign s02= in[16:23];   assign s03= in[24:31];
-assign s10= in[32:39];  assign s11= in[40:47];   assign s12= in[48:55];   assign s13= in[56:63];
-assign s20= in[64:71];  assign s21= in[72:79];   assign s22= in[80:87];   assign s23= in[88:95];
-assign s30= in[96:103]; assign s31= in[104:111]; assign s32= in[112:119]; assign s33= in[120:127];
-
-
+input [127:0] in;
+output[127:0] out;
+input [n-1:0] key_d;
 
 function [0:127] InvSubBytes( input [0:7]
 s00,s01,s02,s03,
@@ -19,22 +10,22 @@ s10,s11,s12,s13,
 s20,s21,s22,s23,
 s30,s31,s32,s33
  );
-reg [0:7]S00,S01,S02,S03;
-reg [0:7]S10,S11,S12,S13;
-reg [0:7]S20,S21,S22,S23;
-reg [0:7]S30,S31,S32,S33;
+reg [0:7]ss00,ss01,ss02,ss03;
+reg [0:7]ss10,ss11,ss12,ss13;
+reg [0:7]ss20,ss21,ss22,ss23;
+reg [0:7]ss30,ss31,ss32,ss33;
 
 
 begin 
- S00 =sbout(s00); S01 =sbout(s01); S02=sbout(s02); S03=sbout(s03);
- S10 =sbout(s00); S11 =sbout(s01); S12=sbout(s02); S13=sbout(s03);
- S20 =sbout(s00); S21 =sbout(s01); S22=sbout(s02); S23=sbout(s03);
- S30 =sbout(s00); S31 =sbout(s01); S32=sbout(s02); S33=sbout(s03);
+ ss00 =sbout(s00); ss01 =sbout(s01); ss02=sbout(s02); ss03=sbout(s03);
+ ss10 =sbout(s00); ss11 =sbout(s01); ss12=sbout(s02); ss13=sbout(s03);
+ ss20 =sbout(s00); ss21 =sbout(s01); ss22=sbout(s02); ss23=sbout(s03);
+ ss30 =sbout(s00); ss31 =sbout(s01); ss32=sbout(s02); ss33=sbout(s03);
 
- InvSubBytes[0:7]=S00;      InvSubBytes[8:15]=S01;    InvSubBytes[16:23]=S02;    InvSubBytes[24:31]=S03;
- InvSubBytes[32:39]=S10;    InvSubBytes[40:47]=S11;   InvSubBytes[48:55]=S12;    InvSubBytes[56:63]=S13;
- InvSubBytes[64:71]=S20;    InvSubBytes[72:79]=S21;    InvSubBytes[80:87]=S22;    InvSubBytes[88:95]=S23;
- InvSubBytes[96:103]=S30;   InvSubBytes[104:111]=S31; InvSubBytes[112:119]=S32;  InvSubBytes[120:127]=S33;
+ InvSubBytes[0:7]=ss00;      InvSubBytes[8:15]=ss01;    InvSubBytes[16:23]=ss02;    InvSubBytes[24:31]=ss03;
+ InvSubBytes[32:39]=ss10;    InvSubBytes[40:47]=ss11;   InvSubBytes[48:55]=ss12;    InvSubBytes[56:63]=ss13;
+ InvSubBytes[64:71]=ss20;    InvSubBytes[72:79]=ss21;    InvSubBytes[80:87]=ss22;    InvSubBytes[88:95]=ss23;
+ InvSubBytes[96:103]=ss30;   InvSubBytes[104:111]=ss31; InvSubBytes[112:119]=ss32;  InvSubBytes[120:127]=ss33;
 
 
 end

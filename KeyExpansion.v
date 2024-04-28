@@ -1,3 +1,8 @@
+
+module AddRoundKey(input [0:127] in,input [0:127] key_add, output [0:127] out);
+assign out=in^key_add;
+endmodule
+
 module KeyExpansion#(parameter Nk=4,parameter nr=10)(key,w);
 input [0:32*Nk-1] key; // 4*nk byte size and 1 byte = 8 bit so 8*4*nk=32*nk
 output [0:128*(nr+1)-1]w; // nb*(nr+1) words where nb always = 4 and 1 word = 4 bytes = 32 bit so 32*4=128
@@ -6,12 +11,13 @@ reg [0:31]sub_temp; // used for the output of Subword
 reg [0:31]rot_temp; // used for the output of Rotword
 reg [0:31]rcon; //used for the output of rcon_gen
 reg [0:31]temp2;
-integer i,j;
+integer i;
 always @* begin
-w=key; // assign the first words fot the output to be the key itself --> The while loop in the document
-for(i=Nk;i<4*(nr+1);i=i+1)
+for(i=0;i<32*Nk;i=i+1)
+w[i]=key[i]; // assign the first words fot the output to be the key itself --> The while loop in the document	
+for(i=Nk;i<4*(nr+1);i=i+1)	
 begin
-temp=w[((32*i)-32)+:31]; // [96:127]-->[128:159]-->[160:191]
+temp=w[((32*i)-32)+:32]; // [96:127]-->[128:159]-->[160:191]
 if(i%Nk==0)
 begin
 rot_temp=RotWord(temp);
@@ -21,8 +27,8 @@ temp=sub_temp ^ rcon;
 end
 else if (Nk > 6 && i % Nk == 4)
 temp = SubWord(temp);
-temp2=w[(32*i-32*Nk)+:31]^temp; //[0:31]-->[32:63]->.....-->[1248:1279]
-w[(32*i)+:31]=temp2;				  //[128:159]-->[160:191]-->.....-->[1376:1407]
+temp2=w[(32*i-32*Nk)+:32]^temp; //[0:31]-->[32:63]->.....-->[1248:1279]
+w[(32*i)+:32]=temp2;				  //[128:159]-->[160:191]-->.....-->[1376:1407]
 end
 end
 function [0:31] rcon_gen(input [0:3]r);
@@ -44,15 +50,16 @@ end
 endfunction
 function [0:31] RotWord(input[0:31] word);
 begin
-reg [0:7] temp;
-temp=word[0:7];
-word[0:23]=word[8:31];
-word[24:31]=temp;
+reg [0:7] temp;	
+temp=word[0:7];	//putting the first byte in a temp reg
+word[0:23]=word[8:31];	//shifting the word to the left so if it was b1,b2,b3 and b4 it becomes b2,b3,b4 and b4
+word[24:31]=temp;	// putting the first byte into it's new place so the word becomes b2,b3,b4 and b1
 RotWord=word;
 end
 endfunction
 function [0:31] SubWord(input[0:31] word);
 begin
+// dividing the input word into 4 bytes b1,b2,b3 and b4
 reg [0:7]b1;
 reg [0:7]b2;
 reg [0:7]b3;
@@ -61,6 +68,7 @@ b1=word[0:7];
 b2=word[8:15];
 b3=word[16:23];
 b4=word[24:31];
+// let each byte equal it's subword using c function
 b1=c(b1);
 b2=c(b2);
 b3=c(b3);
